@@ -15,7 +15,7 @@ CONTACT_TH = "หากพบข้อสงสัยเกี่ยวกับ
 CONTACT_EN = "For formatting inquiries, please contact the Graduate Studies Office."
 
 # =========================================================
-# 2. ตั้งค่าหน้าเว็บไซต์และ CSS ตกแต่งความสวยงาม
+# 2. ตั้งค่าหน้าเว็บไซต์และ CSS ธีมสีประจำวิทยาลัย (#33c0ca และ #b52324)
 # =========================================================
 st.set_page_config(
     page_title="ASCE Reference Checker | ระบบตรวจสอบเอกสารอ้างอิง",
@@ -32,53 +32,92 @@ st.markdown("""
         font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
     }
 
-    /* แบนเนอร์ส่วนหัว */
+    /* แบนเนอร์ส่วนหัว (ไล่เฉดสี #b52324 และ #33c0ca) */
     .hero-banner {
-        background: linear-gradient(135deg, #0f2942 0%, #1d4e89 100%);
+        background: linear-gradient(135deg, #b52324 0%, #283848 54%, #33c0ca 100%);
+        border-bottom: 5px solid #33c0ca;
         padding: 2rem 2.2rem;
         border-radius: 14px;
         color: #ffffff;
         margin-bottom: 1.5rem;
-        box-shadow: 0 4px 14px rgba(15, 41, 66, 0.15);
+        box-shadow: 0 4px 16px rgba(181, 35, 36, 0.16);
     }
     .hero-badge {
         display: inline-block;
-        background-color: rgba(255, 255, 255, 0.18);
-        color: #e0f2fe;
-        padding: 0.25rem 0.75rem;
+        background-color: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(51, 192, 202, 0.85);
+        color: #ffffff;
+        padding: 0.28rem 0.85rem;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 500;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.65rem;
     }
     .hero-title {
         font-size: 1.85rem;
         font-weight: 700;
         margin: 0 0 0.5rem 0;
         line-height: 1.3;
+        color: #ffffff;
     }
     .hero-subtitle {
         font-size: 1rem;
-        color: #dbeafe;
+        color: #f1f5f9;
         margin: 0;
         line-height: 1.6;
     }
 
+    /* แถบด้านข้าง (Sidebar) */
+    section[data-testid="stSidebar"] {
+        border-right: 3px solid #33c0ca;
+    }
+
     /* กล่องการ์ดแสดงตัวเลขสถิติ */
     div[data-testid="stMetric"] {
-        background-color: #f8fafc;
+        background-color: #ffffff;
         border: 1px solid #e2e8f0;
+        border-left: 5px solid #33c0ca;
         padding: 1rem 1.2rem;
         border-radius: 10px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+    div[data-testid="column"]:nth-child(3) div[data-testid="stMetric"],
+    div[data-testid="column"]:nth-child(4) div[data-testid="stMetric"] {
+        border-left: 5px solid #b52324;
     }
 
     /* กล่องอัปโหลดไฟล์ */
     section[data-testid="stFileUploader"] {
-        background-color: #f8fafc;
-        border: 1.5px dashed #94a3b8;
+        background-color: #f3fbfc;
+        border: 2px dashed #33c0ca;
         border-radius: 12px;
         padding: 1rem;
+        transition: border-color 0.2s ease;
+    }
+    section[data-testid="stFileUploader"]:hover {
+        border-color: #b52324;
+    }
+
+    /* ปุ่มดาวน์โหลดรายงาน Excel */
+    div[data-testid="stDownloadButton"] > button {
+        background-color: #b52324 !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.55rem 1.2rem;
+        transition: all 0.2s ease;
+    }
+    div[data-testid="stDownloadButton"] > button:hover {
+        background-color: #33c0ca !important;
+        color: #0f2942 !important;
+    }
+
+    /* แถบแท็บแสดงผล */
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: #b52324 !important;
+        border-bottom-color: #b52324 !important;
+        font-weight: 600;
     }
 
     /* ส่วนท้ายเว็บ */
@@ -86,9 +125,9 @@ st.markdown("""
         margin-top: 3rem;
         padding-top: 1rem;
         padding-bottom: 0.8rem;
-        border-top: 1px solid #e2e8f0;
+        border-top: 2px solid #33c0ca;
         text-align: center;
-        color: #64748b;
+        color: #475569;
         font-size: 0.88rem;
     }
 </style>
