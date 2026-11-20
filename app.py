@@ -174,13 +174,13 @@ TEXTS = {
     "th": {
         "org": ORG_NAME_TH,
         "title": "ระบบตรวจสอบเอกสารอ้างอิงวิทยานิพนธ์ (มาตรฐาน ASCE)",
-        "subtitle": "ตรวจสอบความสอดคล้องระหว่างการอ้างอิงในเนื้อหา (In-text Citations) กับบรรณานุกรมท้ายเล่ม (References) พร้อมตรวจรูปแบบการพิมพ์ตามเกณฑ์ American Society of Civil Engineers อัตโนมัติ",
+        "subtitle": "ตรวจสอบความสอดคล้องระหว่างการอ้างอิงในเนื้อหา (In-text Citations) กับบรรณานุกรมท้ายเล่ม (References / Bibliography) พร้อมตรวจรูปแบบการพิมพ์ตามเกณฑ์ American Society of Civil Engineers อัตโนมัติ",
         "sleep_notice": "💡 **หมายเหตุการใช้งาน:** หากเปิดลิงก์แล้วพบหน้าจอแจ้งเตือนพร้อมปุ่มสีฟ้า **\"Yes, get this app back up!\"** ให้กดปุ่มดังกล่าวและรอประมาณ 15 วินาที ระบบจะเปิดใช้งานได้ตามปกติ",
         "guide_title": "📌 **คำแนะนำการเตรียมไฟล์และขอบเขตการตรวจสอบ (คลิกเพื่ออ่าน)**",
         "guide_body": """
 **1. การเตรียมไฟล์ก่อนอัปโหลด:**
 * รองรับไฟล์นามสกุล **`.docx` (แนะนำเพื่อความแม่นยำสูงสุด)** และ **`.pdf`** ขนาดไม่เกิน 200 MB
-* ในเอกสารต้องมีหัวข้อ **`References`**, **`เอกสารอ้างอิง`** หรือ **`บรรณานุกรม`** แยกขึ้นบรรทัดใหม่อย่างชัดเจนก่อนเริ่มรายการอ้างอิงท้ายเล่ม
+* ในเอกสารต้องมีหัวข้อ **`References`**, **`Bibliography`**, **`เอกสารอ้างอิง`** หรือ **`บรรณานุกรม`** แยกขึ้นบรรทัดใหม่อย่างชัดเจนก่อนเริ่มรายการอ้างอิงท้ายเล่ม
 
 **2. สิ่งที่ระบบตรวจสอบให้:**
 * **Cross-Matching:** เช็กว่าทุกจุดที่อ้างอิงในเนื้อหามีรายชื่อท้ายเล่มครบหรือไม่, มีรายการเกินท้ายเล่มที่ไม่ได้อ้างอิงหรือไม่ และปี พ.ศ./ค.ศ. ตรงกันหรือไม่
@@ -202,7 +202,7 @@ TEXTS = {
         "no_refs": "ไม่พบรายการบรรณานุกรมในเอกสาร",
         "err_prefix": "ไม่สามารถประมวลผลเอกสารได้:",
         "err_ext": "รองรับเฉพาะไฟล์ .docx และ .pdf เท่านั้น",
-        "err_no_heading": "ไม่พบหัวข้อ 'References' หรือ 'เอกสารอ้างอิง' ในไฟล์ กรุณาตรวจสอบว่ามีหัวข้อดังกล่าวขึ้นบรรทัดใหม่ในเอกสาร",
+        "err_no_heading": "ไม่พบหัวข้อ 'References', 'Bibliography' หรือ 'เอกสารอ้างอิง' ในไฟล์ กรุณาตรวจสอบว่ามีหัวข้อดังกล่าวขึ้นบรรทัดใหม่ในเอกสาร",
         "sb_header": "📖 ตัวอย่างรูปแบบ ASCE ที่ถูกต้อง",
         "sb_intext_title": "1. การอ้างอิงในเนื้อหา (In-text)",
         "sb_intext_ex": """
@@ -228,13 +228,13 @@ TEXTS = {
     "en": {
         "org": ORG_NAME_EN,
         "title": "Thesis Reference Validation System (ASCE Standard)",
-        "subtitle": "Automatically cross-match in-text citations against the reference list and verify formatting compliance with the American Society of Civil Engineers (ASCE) style guide.",
+        "subtitle": "Automatically cross-match in-text citations against the reference list (References / Bibliography) and verify formatting compliance with the American Society of Civil Engineers (ASCE) style guide.",
         "sleep_notice": "💡 **Usage Note:** If you open this link and see a notice screen with a blue **\"Yes, get this app back up!\"** button, simply click that button and wait about 15 seconds for the system to load normally.",
         "guide_title": "📌 **File Preparation Guide & Validation Scope (Click to expand)**",
         "guide_body": """
 **1. File Preparation Before Uploading:**
 * Supports **`.docx` (recommended for highest accuracy)** and **`.pdf`** files up to 200 MB.
-* Your document must contain a clear standalone heading named **`References`** (or **`เอกสารอ้างอิง`**) before the reference list begins.
+* Your document must contain a clear standalone heading named **`References`** or **`Bibliography`** (or **`เอกสารอ้างอิง`** / **`บรรณานุกรม`**) before the reference list begins.
 
 **2. What This System Checks:**
 * **Cross-Matching:** Detects in-text citations missing from the reference list, uncited entries in the reference list, and publication year mismatches between text and references.
@@ -256,7 +256,7 @@ TEXTS = {
         "no_refs": "No reference entries were detected in the document.",
         "err_prefix": "Unable to process document:",
         "err_ext": "Only .docx and .pdf files are supported.",
-        "err_no_heading": "Could not find a standalone 'References' heading. Please ensure your reference section starts with a clear 'References' heading on its own line.",
+        "err_no_heading": "Could not find a standalone 'References' or 'Bibliography' heading. Please ensure your reference section starts with a clear heading on its own line.",
         "sb_header": "📖 Quick ASCE Style Guide",
         "sb_intext_title": "1. In-Text Citations",
         "sb_intext_ex": """
@@ -322,7 +322,7 @@ class ASCEReferenceChecker:
 
     def split_sections(self):
         pattern = re.compile(
-            r"\n\s*(?:REFERENCES|เอกสารอ้างอิง|บรรณานุกรม)\s*:?\s*\n",
+            r"\n\s*(?:REFERENCES?|BIBLIOGRAPHY|เอกสารอ้างอิง|บรรณานุกรม)\s*:?\s*\n",
             re.IGNORECASE
         )
         matches = list(pattern.finditer(self.full_text))
