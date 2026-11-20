@@ -22,25 +22,28 @@ jobs:
 
       - name: Open and Wake Up Streamlit App
         env:
-          APP_URL: ".streamlit.app"
+          APP_URL: "https://asce-thesis-checker-dfyjj78n2vry82ttmvghsa.streamlit.app"
         run: |
           python - << 'EOF'
           import os
           from playwright.sync_api import sync_playwright
 
-          url = os.environ["APP_URL"]
+          url = os.environ["APP_URL"].strip()
+          if "ใส่ลิงก์เว็บของคุณที่นี่" in url or not url.startswith("http"):
+              raise ValueError("กรุณาใส่ URL จริงของเว็บไซต์ .streamlit.app ในบรรทัด APP_URL ก่อน")
+
           with sync_playwright() as p:
               browser = p.chromium.launch(headless=True)
               page = browser.new_page()
               print(f"Opening {url} ...")
-              page.goto(url, wait_until="networkidle", timeout=60000)
-              page.wait_for_timeout(5000)
+              page.goto(url, wait_until="domcontentloaded", timeout=60000)
+              page.wait_for_timeout(10000)
 
               wake_btn = page.locator('button:has-text("Yes, get this app back up")')
               if wake_btn.count() > 0:
                   print("App is sleeping. Clicking wake-up button...")
                   wake_btn.first.click()
-                  page.wait_for_timeout(20000)
+                  page.wait_for_timeout(25000)
                   print("App woken up successfully!")
               else:
                   print("App is already awake!")
