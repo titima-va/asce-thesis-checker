@@ -10,7 +10,7 @@ import streamlit as st
 # 1. ตั้งค่าชื่อหน่วยงาน (สามารถแก้ไขข้อความในเครื่องหมายคำพูดได้ตามต้องการ)
 # =========================================================
 ORG_NAME_TH = "บัณฑิตศึกษา วิทยาลัยการคอมพิวเตอร์ | ระบบบริการตรวจสอบรูปแบบวิทยานิพนธ์"
-ORG_NAME_EN = "Graduate Students, College of Computing | Thesis Formatting & Reference Service"
+ORG_NAME_EN = "Graduate Studies, College of Computing | Thesis Formatting & Reference Service"
 CONTACT_TH = "หากพบข้อสงสัยเกี่ยวกับรูปแบบการอ้างอิง กรุณาติดต่อเจ้าหน้าที่งานบัณฑิตศึกษา"
 CONTACT_EN = "For formatting inquiries, please contact the Graduate Studies Office."
 
@@ -38,7 +38,7 @@ st.markdown("""
         padding: 2rem 2.2rem;
         border-radius: 14px;
         color: #ffffff;
-        margin-bottom: 1.2rem;
+        margin-bottom: 1.5rem;
         box-shadow: 0 4px 14px rgba(15, 41, 66, 0.15);
     }
     .hero-badge {
@@ -85,6 +85,7 @@ st.markdown("""
     .footer-box {
         margin-top: 3rem;
         padding-top: 1rem;
+        padding-bottom: 0.8rem;
         border-top: 1px solid #e2e8f0;
         text-align: center;
         color: #64748b;
@@ -570,9 +571,6 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# กล่องข้อความแจ้งเตือนกรณีระบบเข้าสู่โหมดพัก
-st.info(t["sleep_notice"])
-
 # กล่องคำแนะนำการเตรียมไฟล์
 with st.expander(t["guide_title"], expanded=False):
     st.markdown(t["guide_body"])
@@ -643,9 +641,11 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"{t['err_prefix']} {e}")
 
-# ส่วนท้ายเว็บ
+# ส่วนท้ายเว็บและกล่องหมายเหตุล่างสุด
 st.markdown(f"""
 <div class="footer-box">
     {t["footer"]}
 </div>
 """, unsafe_allow_html=True)
+
+st.info(t["sleep_notice"])
