@@ -38,7 +38,7 @@ st.markdown("""
         padding: 2rem 2.2rem;
         border-radius: 14px;
         color: #ffffff;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.2rem;
         box-shadow: 0 4px 14px rgba(15, 41, 66, 0.15);
     }
     .hero-badge {
@@ -101,6 +101,7 @@ TEXTS = {
         "org": ORG_NAME_TH,
         "title": "ระบบตรวจสอบเอกสารอ้างอิงวิทยานิพนธ์ (มาตรฐาน ASCE)",
         "subtitle": "ตรวจสอบความสอดคล้องระหว่างการอ้างอิงในเนื้อหา (In-text Citations) กับบรรณานุกรมท้ายเล่ม (References) พร้อมตรวจรูปแบบการพิมพ์ตามเกณฑ์ American Society of Civil Engineers อัตโนมัติ",
+        "sleep_notice": "💡 **หมายเหตุการใช้งาน:** หากเปิดลิงก์แล้วพบหน้าจอแจ้งเตือนพร้อมปุ่มสีฟ้า **\"Yes, get this app back up!\"** ให้กดปุ่มดังกล่าวและรอประมาณ 15 วินาที ระบบจะเปิดใช้งานได้ตามปกติ",
         "guide_title": "📌 คำแนะนำการเตรียมไฟล์และขอบเขตการตรวจสอบ (คลิกเพื่ออ่าน)",
         "guide_body": """
 **1. การเตรียมไฟล์ก่อนอัปโหลด:**
@@ -154,6 +155,7 @@ TEXTS = {
         "org": ORG_NAME_EN,
         "title": "Thesis Reference Validation System (ASCE Standard)",
         "subtitle": "Automatically cross-match in-text citations against the reference list and verify formatting compliance with the American Society of Civil Engineers (ASCE) style guide.",
+        "sleep_notice": "💡 **Usage Note:** If you open this link and see a notice screen with a blue **\"Yes, get this app back up!\"** button, simply click that button and wait about 15 seconds for the system to load normally.",
         "guide_title": "📌 File Preparation Guide & Validation Scope (Click to expand)",
         "guide_body": """
 **1. File Preparation Before Uploading:**
@@ -567,6 +569,9 @@ st.markdown(f"""
     <p class="hero-subtitle">{t["subtitle"]}</p>
 </div>
 """, unsafe_allow_html=True)
+
+# กล่องข้อความแจ้งเตือนกรณีระบบเข้าสู่โหมดพัก
+st.info(t["sleep_notice"])
 
 # กล่องคำแนะนำการเตรียมไฟล์
 with st.expander(t["guide_title"], expanded=False):
