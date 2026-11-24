@@ -11,11 +11,9 @@ import streamlit as st
 # =========================================================
 ORG_NAME_TH = "บัณฑิตศึกษา วิทยาลัยการคอมพิวเตอร์ | ระบบบริการตรวจสอบรูปแบบวิทยานิพนธ์"
 ORG_NAME_EN = "Graduate Studies, College of Computing | Thesis Formatting & Reference Service"
-CONTACT_TH = "หากพบข้อสงสัยเกี่ยวกับรูปแบบการอ้างอิง กรุณาติดต่อเจ้าหน้าที่งานบัณฑิตศึกษา"
-CONTACT_EN = "For formatting inquiries, please contact the Graduate Studies Office."
 
 # =========================================================
-# 2. ตั้งค่าหน้าเว็บไซต์และ CSS ธีมสีประจำวิทยาลัย (#33c0ca และ #b52324)
+# 2. ตั้งค่าหน้าเว็บไซต์และ CSS ธีมสี (#b8e8e1, #33c0ca และ #b52324)
 # =========================================================
 st.set_page_config(
     page_title="ASCE Reference Checker | ระบบตรวจสอบเอกสารอ้างอิง",
@@ -30,6 +28,14 @@ st.markdown("""
 
     html, body, [class*="css"] {
         font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+    }
+
+    /* พื้นหลังหลักของเว็บไซต์ (#b8e8e1) */
+    .stApp, [data-testid="stAppViewContainer"] {
+        background-color: #b8e8e1 !important;
+    }
+    [data-testid="stHeader"] {
+        background-color: rgba(184, 232, 225, 0.85) !important;
     }
 
     /* แบนเนอร์ส่วนหัว (ไล่เฉดสี #b52324 และ #33c0ca) */
@@ -69,11 +75,12 @@ st.markdown("""
 
     /* กล่องคำแนะนำการเตรียมไฟล์ (เน้นสี #33c0ca และตัวหนา) */
     div[data-testid="stExpander"] {
+        background-color: #ffffff !important;
         border: 2px solid #33c0ca !important;
         border-radius: 12px !important;
         overflow: hidden;
         margin-bottom: 1.2rem;
-        box-shadow: 0 2px 8px rgba(51, 192, 202, 0.15);
+        box-shadow: 0 2px 8px rgba(15, 41, 66, 0.06);
     }
     div[data-testid="stExpander"] > details > summary {
         background-color: #33c0ca !important;
@@ -104,11 +111,11 @@ st.markdown("""
     /* กล่องการ์ดแสดงตัวเลขสถิติ */
     div[data-testid="stMetric"] {
         background-color: #ffffff;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
         border-left: 5px solid #33c0ca;
         padding: 1rem 1.2rem;
         border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
     div[data-testid="column"]:nth-child(3) div[data-testid="stMetric"],
     div[data-testid="column"]:nth-child(4) div[data-testid="stMetric"] {
@@ -122,7 +129,7 @@ st.markdown("""
         color: #0f2942 !important;
     }
     section[data-testid="stFileUploader"] {
-        background-color: #f3fbfc;
+        background-color: #ffffff;
         border: 2px dashed #33c0ca;
         border-radius: 12px;
         padding: 1rem;
@@ -154,15 +161,19 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* ส่วนท้ายเว็บ */
-    .footer-box {
+    /* กล่องแจ้งเตือนหมายเหตุด้านล่าง */
+    div[data-testid="stAlert"] {
+        background-color: #ffffff !important;
+        border: 1.5px solid #33c0ca !important;
+        border-radius: 10px !important;
+    }
+
+    /* เส้นคั่นส่วนท้ายเว็บ */
+    .bottom-divider {
         margin-top: 3rem;
-        padding-top: 1rem;
-        padding-bottom: 0.8rem;
+        margin-bottom: 1.2rem;
+        border: none;
         border-top: 2px solid #33c0ca;
-        text-align: center;
-        color: #475569;
-        font-size: 0.88rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -222,7 +233,6 @@ TEXTS = {
         """,
         "sb_privacy_title": "🔒 ความปลอดภัยของข้อมูล",
         "sb_privacy_text": "ไฟล์วิทยานิพนธ์จะถูกประมวลผลในหน่วยความจำชั่วคราวขณะใช้งานเท่านั้น ระบบไม่มีการบันทึกหรือเก็บสำเนาไฟล์ไว้บนเซิร์ฟเวอร์",
-        "footer": CONTACT_TH,
         "col_refs": ["ลำดับ", "ผู้แต่ง", "ปี", "ข้อความบรรณานุกรมเต็ม"]
     },
     "en": {
@@ -276,7 +286,6 @@ TEXTS = {
         """,
         "sb_privacy_title": "🔒 Data Privacy Notice",
         "sb_privacy_text": "Uploaded documents are processed strictly in temporary session memory (RAM) and are never stored or retained on any server.",
-        "footer": CONTACT_EN,
         "col_refs": ["No.", "Authors", "Year", "Full Reference Text"]
     }
 }
@@ -714,11 +723,6 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"{t['err_prefix']} {e}")
 
-# ส่วนท้ายเว็บและกล่องหมายเหตุล่างสุด
-st.markdown(f"""
-<div class="footer-box">
-    {t["footer"]}
-</div>
-""", unsafe_allow_html=True)
-
+# เส้นคั่นและกล่องหมายเหตุล่างสุด
+st.markdown('<hr class="bottom-divider">', unsafe_allow_html=True)
 st.info(t["sleep_notice"])
