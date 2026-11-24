@@ -7,15 +7,7 @@ import pandas as pd
 import streamlit as st
 
 # =========================================================
-# 1. ตั้งค่าชื่อหน่วยงาน (สามารถแก้ไขข้อความในเครื่องหมายคำพูดได้ตามต้องการ)
-# =========================================================
-ORG_NAME_TH = "บัณฑิตศึกษา วิทยาลัยการคอมพิวเตอร์ | ระบบบริการตรวจสอบรูปแบบวิทยานิพนธ์"
-ORG_NAME_EN = "Graduate Studies, College of Computing | Thesis Formatting & Reference Service"
-CONTACT_TH = "หากพบข้อสงสัยเกี่ยวกับรูปแบบการอ้างอิง กรุณาติดต่อเจ้าหน้าที่งานบัณฑิตศึกษา"
-CONTACT_EN = "For formatting inquiries, please contact the Graduate Studies Office."
-
-# =========================================================
-# 2. ตั้งค่าหน้าเว็บไซต์และ CSS ธีมสีประจำวิทยาลัย (#33c0ca และ #b52324)
+# 1. ตั้งค่าหน้าเว็บไซต์และ CSS ธีมสี (#d9ecf0, #33c0ca และ #b52324)
 # =========================================================
 st.set_page_config(
     page_title="ASCE Reference Checker | ระบบตรวจสอบเอกสารอ้างอิง",
@@ -30,6 +22,14 @@ st.markdown("""
 
     html, body, [class*="css"] {
         font-family: 'IBM Plex Sans Thai', 'Inter', sans-serif;
+    }
+
+    /* พื้นหลังหลักของเว็บไซต์ (#d9ecf0) */
+    .stApp, [data-testid="stAppViewContainer"] {
+        background-color: #d9ecf0 !important;
+    }
+    [data-testid="stHeader"] {
+        background-color: rgba(217, 236, 240, 0.85) !important;
     }
 
     /* แบนเนอร์ส่วนหัว (ไล่เฉดสี #b52324 และ #33c0ca) */
@@ -69,11 +69,12 @@ st.markdown("""
 
     /* กล่องคำแนะนำการเตรียมไฟล์ (เน้นสี #33c0ca และตัวหนา) */
     div[data-testid="stExpander"] {
+        background-color: #ffffff !important;
         border: 2px solid #33c0ca !important;
         border-radius: 12px !important;
         overflow: hidden;
         margin-bottom: 1.2rem;
-        box-shadow: 0 2px 8px rgba(51, 192, 202, 0.15);
+        box-shadow: 0 2px 8px rgba(15, 41, 66, 0.06);
     }
     div[data-testid="stExpander"] > details > summary {
         background-color: #33c0ca !important;
@@ -104,11 +105,11 @@ st.markdown("""
     /* กล่องการ์ดแสดงตัวเลขสถิติ */
     div[data-testid="stMetric"] {
         background-color: #ffffff;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
         border-left: 5px solid #33c0ca;
         padding: 1rem 1.2rem;
         border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     }
     div[data-testid="column"]:nth-child(3) div[data-testid="stMetric"],
     div[data-testid="column"]:nth-child(4) div[data-testid="stMetric"] {
@@ -122,7 +123,7 @@ st.markdown("""
         color: #0f2942 !important;
     }
     section[data-testid="stFileUploader"] {
-        background-color: #f3fbfc;
+        background-color: #ffffff;
         border: 2px dashed #33c0ca;
         border-radius: 12px;
         padding: 1rem;
@@ -154,38 +155,53 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* ส่วนท้ายเว็บ */
-    .footer-box {
+    /* กล่องแจ้งเตือนหมายเหตุด้านล่าง */
+    div[data-testid="stAlert"] {
+        background-color: #ffffff !important;
+        border: 1.5px solid #33c0ca !important;
+        border-radius: 10px !important;
+    }
+
+    /* เส้นคั่นส่วนท้ายเว็บ */
+    .bottom-divider {
         margin-top: 3rem;
-        padding-top: 1rem;
-        padding-bottom: 0.8rem;
+        margin-bottom: 1.2rem;
+        border: none;
         border-top: 2px solid #33c0ca;
-        text-align: center;
-        color: #475569;
-        font-size: 0.88rem;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # =========================================================
-# 3. คลังข้อความ 2 ภาษา (TH / EN)
+# 2. คลังข้อความ 2 ภาษา (TH / EN)
 # =========================================================
 TEXTS = {
     "th": {
-        "org": ORG_NAME_TH,
+        "org": "บัณฑิตศึกษา วิทยาลัยการคอมพิวเตอร์ | ระบบบริการตรวจสอบรูปแบบวิทยานิพนธ์",
         "title": "ระบบตรวจสอบเอกสารอ้างอิงวิทยานิพนธ์ (มาตรฐาน ASCE)",
-        "subtitle": "ตรวจสอบความสอดคล้องระหว่างการอ้างอิงในเนื้อหา (In-text Citations) กับบรรณานุกรมท้ายเล่ม (References / Bibliography) พร้อมตรวจรูปแบบการพิมพ์ตามเกณฑ์ American Society of Civil Engineers อัตโนมัติ",
-        "sleep_notice": "💡 **หมายเหตุการใช้งาน:** หากเปิดลิงก์แล้วพบหน้าจอแจ้งเตือนพร้อมปุ่มสีฟ้า **\"Yes, get this app back up!\"** ให้กดปุ่มดังกล่าวและรอประมาณ 15 วินาที ระบบจะเปิดใช้งานได้ตามปกติ",
+        "subtitle": (
+            "ตรวจสอบความสอดคล้องระหว่างการอ้างอิงในเนื้อหา (In-text Citations) "
+            "กับบรรณานุกรมท้ายเล่ม (References / Bibliography) "
+            "พร้อมตรวจรูปแบบการพิมพ์ตามเกณฑ์ American Society of Civil Engineers อัตโนมัติ"
+        ),
+        "sleep_notice": (
+            '💡 **หมายเหตุการใช้งาน:** หากเปิดลิงก์แล้วพบหน้าจอแจ้งเตือนพร้อมปุ่มสีฟ้า '
+            '**"Yes, get this app back up!"** ให้กดปุ่มดังกล่าวและรอประมาณ 15 วินาที '
+            'ระบบจะเปิดใช้งานได้ตามปกติ'
+        ),
         "guide_title": "📌 **คำแนะนำการเตรียมไฟล์และขอบเขตการตรวจสอบ (คลิกเพื่ออ่าน)**",
-        "guide_body": """
-**1. การเตรียมไฟล์ก่อนอัปโหลด:**
-* รองรับไฟล์นามสกุล **`.docx` (แนะนำเพื่อความแม่นยำสูงสุด)** และ **`.pdf`** ขนาดไม่เกิน 200 MB
-* ในเอกสารต้องมีหัวข้อ **`References`**, **`Bibliography`**, **`เอกสารอ้างอิง`** หรือ **`บรรณานุกรม`** แยกขึ้นบรรทัดใหม่อย่างชัดเจนก่อนเริ่มรายการอ้างอิงท้ายเล่ม
-
-**2. สิ่งที่ระบบตรวจสอบให้:**
-* **Cross-Matching:** เช็กว่าทุกจุดที่อ้างอิงในเนื้อหามีรายชื่อท้ายเล่มครบหรือไม่, มีรายการเกินท้ายเล่มที่ไม่ได้อ้างอิงหรือไม่ และปี พ.ศ./ค.ศ. ตรงกันหรือไม่
-* **ASCE Formatting:** ตรวจสอบการใช้คำว่า `and` (ห้ามใช้ `&`), การไม่ใส่เครื่องหมายจุลภาค `,` คั่นระหว่างชื่อผู้แต่งกับปีในเนื้อหา, การใส่จุดหลัง `et al.`, การเรียงลำดับตัวอักษร A–Z และเครื่องหมายคำพูดครอบชื่อบทความวารสาร
-        """,
+        "guide_body": (
+            "**1. การเตรียมไฟล์ก่อนอัปโหลด:**\n"
+            "* รองรับไฟล์นามสกุล **`.docx` (แนะนำเพื่อความแม่นยำสูงสุด)** และ **`.pdf`** ขนาดไม่เกิน 200 MB\n"
+            "* ในเอกสารต้องมีหัวข้อ **`References`**, **`Bibliography`**, **`เอกสารอ้างอิง`** หรือ **`บรรณานุกรม`** "
+            "แยกขึ้นบรรทัดใหม่อย่างชัดเจนก่อนเริ่มรายการอ้างอิงท้ายเล่ม\n\n"
+            "**2. สิ่งที่ระบบตรวจสอบให้:**\n"
+            "* **Cross-Matching:** เช็กว่าทุกจุดที่อ้างอิงในเนื้อหามีรายชื่อท้ายเล่มครบหรือไม่ "
+            "มีรายการเกินท้ายเล่มที่ไม่ได้อ้างอิงหรือไม่ และปี พ.ศ./ค.ศ. ตรงกันหรือไม่\n"
+            "* **ASCE Formatting:** ตรวจสอบการใช้คำว่า `and` (ห้ามใช้ `&`), "
+            "การไม่ใส่เครื่องหมายจุลภาค `,` คั่นระหว่างชื่อผู้แต่งกับปีในเนื้อหา, "
+            "การใส่จุดหลัง `et al.`, การเรียงลำดับตัวอักษร A–Z และเครื่องหมายคำพูดครอบชื่อบทความวารสาร"
+        ),
         "upload_label": "📂 **อัปโหลดไฟล์ร่างวิทยานิพนธ์ (.docx หรือ .pdf)**",
         "spinner": "กำลังวิเคราะห์โครงสร้างเอกสารและตรวจสอบรายการอ้างอิง...",
         "success": "ตรวจสอบไฟล์ **{filename}** เสร็จสมบูรณ์!",
@@ -202,44 +218,60 @@ TEXTS = {
         "no_refs": "ไม่พบรายการบรรณานุกรมในเอกสาร",
         "err_prefix": "ไม่สามารถประมวลผลเอกสารได้:",
         "err_ext": "รองรับเฉพาะไฟล์ .docx และ .pdf เท่านั้น",
-        "err_no_heading": "ไม่พบหัวข้อ 'References', 'Bibliography' หรือ 'เอกสารอ้างอิง' ในไฟล์ กรุณาตรวจสอบว่ามีหัวข้อดังกล่าวขึ้นบรรทัดใหม่ในเอกสาร",
+        "err_no_heading": (
+            "ไม่พบหัวข้อ 'References', 'Bibliography' หรือ 'เอกสารอ้างอิง' ในไฟล์ "
+            "กรุณาตรวจสอบว่ามีหัวข้อดังกล่าวขึ้นบรรทัดใหม่ในเอกสาร"
+        ),
         "sb_header": "📖 ตัวอย่างรูปแบบ ASCE ที่ถูกต้อง",
         "sb_intext_title": "1. การอ้างอิงในเนื้อหา (In-text)",
-        "sb_intext_ex": """
-* **ผู้แต่ง 1 คน:** `(Smith 2020)` หรือ `Smith (2020)`
-* **ผู้แต่ง 2 คน:** `(Smith and Jones 2020)` *(ใช้ and ห้ามใช้ &)*
-* **ผู้แต่ง 3 คนขึ้นไป:** `(Smith et al. 2020)` *(มีจุดหลัง al.)*
-* **หลายเรื่องพร้อมกัน:** `(Lee 2019; Smith 2020)`
-* **ข้อควรระวัง:** ไม่มีเครื่องหมายจุลภาค `,` คั่นระหว่างชื่อผู้แต่งและปี
-        """,
+        "sb_intext_ex": (
+            "* **ผู้แต่ง 1 คน:** `(Smith 2020)` หรือ `Smith (2020)`\n"
+            "* **ผู้แต่ง 2 คน:** `(Smith and Jones 2020)` *(ใช้ and ห้ามใช้ &)*\n"
+            "* **ผู้แต่ง 3 คนขึ้นไป:** `(Smith et al. 2020)` *(มีจุดหลัง al.)*\n"
+            "* **หลายเรื่องพร้อมกัน:** `(Lee 2019; Smith 2020)`\n"
+            "* **ข้อควรระวัง:** ไม่มีเครื่องหมายจุลภาค `,` คั่นระหว่างชื่อผู้แต่งและปี"
+        ),
         "sb_ref_title": "2. บรรณานุกรมท้ายเล่ม (References)",
-        "sb_ref_ex": """
-* **บทความวารสาร:**
-  `Smith, J. A., and Jones, B. C. (2020). "Title of the paper." J. Struct. Eng., 146(4), 04020035.`
-* **หนังสือ:**
-  `Brown, R. D. (2018). Structural analysis, 3rd Ed., Wiley, New York.`
-* **การเรียงลำดับ:** เรียงตามตัวอักษรตัวแรกของนามสกุลผู้แต่งคนแรก (A–Z)
-        """,
+        "sb_ref_ex": (
+            "* **บทความวารสาร:**\n"
+            '  `Smith, J. A., and Jones, B. C. (2020). "Title of the paper." J. Struct. Eng., 146(4), 04020035.`\n'
+            "* **หนังสือ:**\n"
+            "  `Brown, R. D. (2018). Structural analysis, 3rd Ed., Wiley, New York.`\n"
+            "* **การเรียงลำดับ:** เรียงตามตัวอักษรตัวแรกของนามสกุลผู้แต่งคนแรก (A–Z)"
+        ),
         "sb_privacy_title": "🔒 ความปลอดภัยของข้อมูล",
-        "sb_privacy_text": "ไฟล์วิทยานิพนธ์จะถูกประมวลผลในหน่วยความจำชั่วคราวขณะใช้งานเท่านั้น ระบบไม่มีการบันทึกหรือเก็บสำเนาไฟล์ไว้บนเซิร์ฟเวอร์",
-        "footer": CONTACT_TH,
+        "sb_privacy_text": (
+            "ไฟล์วิทยานิพนธ์จะถูกประมวลผลในหน่วยความจำชั่วคราวขณะใช้งานเท่านั้น "
+            "ระบบไม่มีการบันทึกหรือเก็บสำเนาไฟล์ไว้บนเซิร์ฟเวอร์"
+        ),
         "col_refs": ["ลำดับ", "ผู้แต่ง", "ปี", "ข้อความบรรณานุกรมเต็ม"]
     },
     "en": {
-        "org": ORG_NAME_EN,
+        "org": "Graduate Studies, College of Computing | Thesis Formatting & Reference Service",
         "title": "Thesis Reference Validation System (ASCE Standard)",
-        "subtitle": "Automatically cross-match in-text citations against the reference list (References / Bibliography) and verify formatting compliance with the American Society of Civil Engineers (ASCE) style guide.",
-        "sleep_notice": "💡 **Usage Note:** If you open this link and see a notice screen with a blue **\"Yes, get this app back up!\"** button, simply click that button and wait about 15 seconds for the system to load normally.",
+        "subtitle": (
+            "Automatically cross-match in-text citations against the reference list "
+            "(References / Bibliography) and verify formatting compliance with the "
+            "American Society of Civil Engineers (ASCE) style guide."
+        ),
+        "sleep_notice": (
+            '💡 **Usage Note:** If you open this link and see a notice screen with a blue '
+            '**"Yes, get this app back up!"** button, simply click that button and wait '
+            'about 15 seconds for the system to load normally.'
+        ),
         "guide_title": "📌 **File Preparation Guide & Validation Scope (Click to expand)**",
-        "guide_body": """
-**1. File Preparation Before Uploading:**
-* Supports **`.docx` (recommended for highest accuracy)** and **`.pdf`** files up to 200 MB.
-* Your document must contain a clear standalone heading named **`References`** or **`Bibliography`** (or **`เอกสารอ้างอิง`** / **`บรรณานุกรม`**) before the reference list begins.
-
-**2. What This System Checks:**
-* **Cross-Matching:** Detects in-text citations missing from the reference list, uncited entries in the reference list, and publication year mismatches between text and references.
-* **ASCE Formatting:** Checks for proper use of `and` instead of `&`, absence of commas between author and year in in-text citations, periods in `et al.`, alphabetical ordering (A–Z), and quotation marks around journal article titles.
-        """,
+        "guide_body": (
+            "**1. File Preparation Before Uploading:**\n"
+            "* Supports **`.docx` (recommended for highest accuracy)** and **`.pdf`** files up to 200 MB.\n"
+            "* Your document must contain a clear standalone heading named **`References`** or **`Bibliography`** "
+            "(or **`เอกสารอ้างอิง`** / **`บรรณานุกรม`**) before the reference list begins.\n\n"
+            "**2. What This System Checks:**\n"
+            "* **Cross-Matching:** Detects in-text citations missing from the reference list, "
+            "uncited entries in the reference list, and publication year mismatches between text and references.\n"
+            "* **ASCE Formatting:** Checks for proper use of `and` instead of `&`, "
+            "absence of commas between author and year in in-text citations, "
+            "periods in `et al.`, alphabetical ordering (A–Z), and quotation marks around journal article titles."
+        ),
         "upload_label": "📂 **Upload Your Thesis Draft (.docx or .pdf)**",
         "spinner": "Analyzing document structure and validating citations...",
         "success": "Validation completed for **{filename}**!",
@@ -256,34 +288,39 @@ TEXTS = {
         "no_refs": "No reference entries were detected in the document.",
         "err_prefix": "Unable to process document:",
         "err_ext": "Only .docx and .pdf files are supported.",
-        "err_no_heading": "Could not find a standalone 'References' or 'Bibliography' heading. Please ensure your reference section starts with a clear heading on its own line.",
+        "err_no_heading": (
+            "Could not find a standalone 'References' or 'Bibliography' heading. "
+            "Please ensure your reference section starts with a clear heading on its own line."
+        ),
         "sb_header": "📖 Quick ASCE Style Guide",
         "sb_intext_title": "1. In-Text Citations",
-        "sb_intext_ex": """
-* **One author:** `(Smith 2020)` or `Smith (2020)`
-* **Two authors:** `(Smith and Jones 2020)` *(Use 'and', never '&')*
-* **Three or more:** `(Smith et al. 2020)` *(Include period after 'al.')*
-* **Multiple works:** `(Lee 2019; Smith 2020)`
-* **Note:** Do NOT put a comma between the author's name and the year.
-        """,
+        "sb_intext_ex": (
+            "* **One author:** `(Smith 2020)` or `Smith (2020)`\n"
+            "* **Two authors:** `(Smith and Jones 2020)` *(Use 'and', never '&')*\n"
+            "* **Three or more:** `(Smith et al. 2020)` *(Include period after 'al.')*\n"
+            "* **Multiple works:** `(Lee 2019; Smith 2020)`\n"
+            "* **Note:** Do NOT put a comma between the author's name and the year."
+        ),
         "sb_ref_title": "2. Reference List Entries",
-        "sb_ref_ex": """
-* **Journal Article:**
-  `Smith, J. A., and Jones, B. C. (2020). "Title of the paper." J. Struct. Eng., 146(4), 04020035.`
-* **Book:**
-  `Brown, R. D. (2018). Structural analysis, 3rd Ed., Wiley, New York.`
-* **Ordering:** Arrange entries alphabetically by the first author's surname (A–Z).
-        """,
+        "sb_ref_ex": (
+            "* **Journal Article:**\n"
+            '  `Smith, J. A., and Jones, B. C. (2020). "Title of the paper." J. Struct. Eng., 146(4), 04020035.`\n'
+            "* **Book:**\n"
+            "  `Brown, R. D. (2018). Structural analysis, 3rd Ed., Wiley, New York.`\n"
+            "* **Ordering:** Arrange entries alphabetically by the first author's surname (A–Z)."
+        ),
         "sb_privacy_title": "🔒 Data Privacy Notice",
-        "sb_privacy_text": "Uploaded documents are processed strictly in temporary session memory (RAM) and are never stored or retained on any server.",
-        "footer": CONTACT_EN,
+        "sb_privacy_text": (
+            "Uploaded documents are processed strictly in temporary session memory (RAM) "
+            "and are never stored or retained on any server."
+        ),
         "col_refs": ["No.", "Authors", "Year", "Full Reference Text"]
     }
 }
 
 
 # =========================================================
-# 4. คลาสประมวลผลและตรวจสอบมาตรฐาน ASCE (รองรับ 2 ภาษา)
+# 3. คลาสประมวลผลและตรวจสอบมาตรฐาน ASCE (รองรับ 2 ภาษา)
 # =========================================================
 class ASCEReferenceChecker:
     def __init__(self, file_name: str, file_bytes: bytes, lang: str = "th"):
@@ -505,10 +542,10 @@ class ASCEReferenceChecker:
                 self._add_format_issue(
                     f"บรรณานุกรมลำดับที่ {idx}", f"Reference #{idx}",
                     entry[:85] + "...",
-                    "บทความวารสารอาจขาดเครื่องหมายคำพูด (\"...\") ครอบชื่อบทความ",
+                    'บทความวารสารอาจขาดเครื่องหมายคำพูด ("...") ครอบชื่อบทความ',
                     "Missing quotation marks around journal article title",
-                    "ASCE กำหนดให้ใส่เครื่องหมายคำพูดครอบชื่อบทความวารสาร เช่น \"Article title.\"",
-                    "Enclose journal article titles in quotation marks, e.g., \"Article title.\""
+                    'ASCE กำหนดให้ใส่เครื่องหมายคำพูดครอบชื่อบทความวารสาร เช่น "Article title."',
+                    'Enclose journal article titles in quotation marks, e.g., "Article title."'
                 )
 
     def cross_match(self):
@@ -594,7 +631,10 @@ class ASCEReferenceChecker:
         df_summary = pd.DataFrame(summary_data)
         df_cross = pd.DataFrame(self.cross_match_issues) if self.cross_match_issues else empty_df
         df_format = pd.DataFrame(self.format_issues) if self.format_issues else empty_df
-        df_refs = pd.DataFrame(self.references)[["index", "authors", "year", "raw"]] if self.references else pd.DataFrame()
+        df_refs = (
+            pd.DataFrame(self.references)[["index", "authors", "year", "raw"]]
+            if self.references else pd.DataFrame()
+        )
         if not df_refs.empty:
             df_refs.columns = t["col_refs"]
 
@@ -608,10 +648,8 @@ class ASCEReferenceChecker:
 
 
 # =========================================================
-# 5. ส่วนติดต่อผู้ใช้งาน (Web Interface)
+# 4. ส่วนติดต่อผู้ใช้งาน (Web Interface)
 # =========================================================
-
-# ตัวสลับภาษาด้านบนขวา
 top_left, top_right = st.columns([4, 1.5])
 with top_right:
     lang_choice = st.radio(
@@ -624,7 +662,6 @@ with top_right:
 lang = "th" if "ไทย" in lang_choice else "en"
 t = TEXTS[lang]
 
-# แถบด้านข้าง (Sidebar) แสดงคู่มือและตัวอย่าง ASCE
 with st.sidebar:
     st.header(t["sb_header"])
     st.subheader(t["sb_intext_title"])
@@ -635,7 +672,6 @@ with st.sidebar:
     st.divider()
     st.info(f"**{t['sb_privacy_title']}**\n\n{t['sb_privacy_text']}")
 
-# แบนเนอร์หัวข้อหลัก
 st.markdown(f"""
 <div class="hero-banner">
     <div class="hero-badge">🎓 {t["org"]}</div>
@@ -644,11 +680,9 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# กล่องคำแนะนำการเตรียมไฟล์
 with st.expander(t["guide_title"], expanded=False):
     st.markdown(t["guide_body"])
 
-# กล่องอัปโหลดไฟล์
 uploaded_file = st.file_uploader(
     t["upload_label"],
     type=["docx", "pdf"]
@@ -662,7 +696,6 @@ if uploaded_file is not None:
 
         st.success(t["success"].format(filename=uploaded_file.name))
 
-        # แสดงการ์ดตัวเลขสรุป 4 ช่อง
         col1, col2, col3, col4 = st.columns(4)
         col1.metric(t["m_intext"], len(checker.in_text_citations))
         col2.metric(t["m_refs"], len(checker.references))
@@ -671,7 +704,6 @@ if uploaded_file is not None:
 
         st.write("")
 
-        # ปุ่มดาวน์โหลดรายงาน Excel
         excel_data = checker.build_excel_bytes()
         report_filename = f"ASCE_Report_{Path(uploaded_file.name).stem}.xlsx"
         st.download_button(
@@ -684,7 +716,6 @@ if uploaded_file is not None:
 
         st.divider()
 
-        # แสดงตารางรายละเอียดแยกตามแท็บ
         tab1, tab2, tab3 = st.tabs([
             f"{t['tab1']} ({len(checker.cross_match_issues)})",
             f"{t['tab2']} ({len(checker.format_issues)})",
@@ -714,11 +745,5 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"{t['err_prefix']} {e}")
 
-# ส่วนท้ายเว็บและกล่องหมายเหตุล่างสุด
-st.markdown(f"""
-<div class="footer-box">
-    {t["footer"]}
-</div>
-""", unsafe_allow_html=True)
-
+st.markdown('<hr class="bottom-divider">', unsafe_allow_html=True)
 st.info(t["sleep_notice"])
